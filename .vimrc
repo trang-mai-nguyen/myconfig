@@ -1,8 +1,8 @@
-call plug#begin('~/.vim/plugged')
+" call plug#begin('~/.vim/plugged')
 
-Plug 'ctrlpvim/ctrlp.vim' 
+" Plug 'ctrlpvim/ctrlp.vim' 
 
-call plug#end()
+" call plug#end()
 
 let g:ctrlp_map = '<c-p>'
 
