@@ -1,12 +1,14 @@
 " Plugins
 call plug#begin('~/.vim/plugged')
 " Plug 'ctrlpvim/ctrlp.vim'
+
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' } " Fuzzy finder for telescope
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'vim-test/vim-test'	" Running tests
+
 Plug 'neovim/nvim-lspconfig'	
 Plug 'williamboman/mason.nvim'	" Manage external editor tooling (LSP, linters, formatters)
 Plug 'williamboman/mason-lspconfig.nvim' " For nvim-lspconfig and mason 
@@ -15,9 +17,13 @@ Plug 'rebelot/kanagawa.nvim'	" Colorscheme
 Plug 'jiangmiao/auto-pairs'
 Plug 'mhartington/formatter.nvim'
 
+Plug 'lewis6991/gitsigns.nvim'	" Gitsigns
+Plug 'tpope/vim-fugitive'		" Gigt
+
 call plug#end()
 
 set nocompatible	" Disable compatibility to old time vi
+set nohidden
 set relativenumber 	" Relative line numbers
 set number			" Also show current absolute line
 set autoindent
@@ -25,7 +31,7 @@ set encoding=utf-8
 set ignorecase		" case insensitive
 set hlsearch		" highlight search
 set noswapfile		" disable creating swap files
-set updatetime=300
+" set updatetime=300
 set scrolloff=4		" Keep at least 4 lines below cursor
 syntax on			" syntax highlight
 set visualbell noerrorbells " No visual and errorbells
@@ -43,14 +49,22 @@ set spell
 
 " Mapping 
 nmap 0 ^	" Begin of the line 
-nmap 9 $	" End of the line
+nmap - $	" End of the line
 let mapleader = " "
 nnoremap <leader>so :source $MYVIMRC<cr>
 imap jk <esc>	" Escape in insert mode
+nnoremap <leader>f :lua vim.lsp.buf.format({}, 5000)<CR>
+" Git
+nnoremap <leader>gb :Gitsigns toggle_current_line_blame<cr>	
+nnoremap <leader>gd :Gvdiffsplit<cr>
 
 " Telescope
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
+
+nnoremap <silent><C-p> :lua require('telescope.builtin').find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>
+nnoremap <silent><C-f> <cmd>lua require('telescope.builtin').live_grep()<cr>
+
 lua << EOF
 require('telescope').setup {
     defaults = {
@@ -62,10 +76,6 @@ require('telescope').setup {
         file_previewer = require("telescope.previewers").vim_buffer_cat.new,
         grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
         qflist_previewer = require("telescope.previewers").vim_buffer_qflist.new,
-	mapping = {
-		i = {
-			}
-		}
     },
     extensions = {
         fzf = {
@@ -79,6 +89,13 @@ require('telescope').setup {
 }
 require('telescope').load_extension('fzf')
 
+require('gitsigns').setup()
+
+require("mason").setup()
+
+require("mason-lspconfig").setup()
+
+
 EOF
 
 " Color scheme
@@ -88,12 +105,4 @@ colorscheme kanagawa
 nmap <silent> <space>t :TestNearest<CR>
 nmap <silent> <space>T :TestFile<CR>
 
-" LSP and Mason 
-lua << EOF
-require("mason").setup()
-require("mason-lspconfig").setup()
-EOF
 
-for f in split(glob('~/.config/nvim/configs/*.vim'), '\n')
-   exe 'source' f
-endfor
