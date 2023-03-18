@@ -1,6 +1,6 @@
+runtime macros/matchit.vim
 " Plugins
 call plug#begin('~/.vim/plugged')
-" Plug 'ctrlpvim/ctrlp.vim'
 
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
@@ -10,8 +10,8 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'vim-test/vim-test'	" Running tests
 
 Plug 'neovim/nvim-lspconfig'	
-Plug 'williamboman/mason.nvim'	" Manage external editor tooling (LSP, linters, formatters)
-Plug 'williamboman/mason-lspconfig.nvim' " For nvim-lspconfig and mason 
+Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/nvim-cmp'
 
 Plug 'rebelot/kanagawa.nvim'	" Colorscheme
 Plug 'jiangmiao/auto-pairs'
@@ -53,7 +53,7 @@ nmap - $	" End of the line
 let mapleader = " "
 nnoremap <leader>so :source $MYVIMRC<cr>
 imap jk <esc>	" Escape in insert mode
-nnoremap <leader>f :lua vim.lsp.buf.format({}, 5000)<CR>
+nnoremap <leader>f :lua vim.lsp.buf.format({ timeout_ms = 2000 })<CR>
 " Git
 nnoremap <leader>gb :Gitsigns toggle_current_line_blame<cr>	
 nnoremap <leader>gd :Gvdiffsplit<cr>
@@ -91,10 +91,23 @@ require('telescope').load_extension('fzf')
 
 require('gitsigns').setup()
 
-require("mason").setup()
+-- Setup lspconfig.
+local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
-require("mason-lspconfig").setup()
+-- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+require('lspconfig')['solargraph'].setup {
+		capabilities = capabilities,
+		flags = {
+			debounce_text_changes = 150,
+		}
+}
 
+require('lspconfig')['tsserver'].setup {
+		capabilities = capabilities,
+		flags = {
+			debounce_text_changes = 150,
+		}
+}
 
 EOF
 
