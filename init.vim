@@ -9,6 +9,7 @@ Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' } " Fuzzy finder
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'vim-test/vim-test'	" Running tests
 
+Plug 'williamboman/mason.nvim'
 Plug 'neovim/nvim-lspconfig'	
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/nvim-cmp'
@@ -19,6 +20,7 @@ Plug 'mhartington/formatter.nvim'
 
 Plug 'lewis6991/gitsigns.nvim'	" Gitsigns
 Plug 'tpope/vim-fugitive'		" Gigt
+Plug 'tpope/vim-surround'	
 
 call plug#end()
 
@@ -26,22 +28,24 @@ set nocompatible	" Disable compatibility to old time vi
 set nohidden
 set relativenumber 	" Relative line numbers
 set number			" Also show current absolute line
-set autoindent
+"set autoindent
 set encoding=utf-8
 set ignorecase		" case insensitive
 set hlsearch		" highlight search
 set noswapfile		" disable creating swap files
 " set updatetime=300
-set scrolloff=4		" Keep at least 4 lines below cursor
+" set scrolloff=4		" Keep at least 4 lines below cursor
 syntax on			" syntax highlight
 set visualbell noerrorbells " No visual and errorbells
 set history=500		" Set number of command + search history to 500
 
 " Use wide tabs
-set tabstop=4		" number of columns occupied by a tab
-set softtabstop=4	" Control how many columns Vim uses when you hit tab key
+set tabstop=2		" number of columns occupied by a tab
+set softtabstop=2	" Control how many columns Vim uses when you hit tab key
+set shiftwidth=2
+set expandtab
 set smarttab		" Affects how tab key presses are interpreted
-set tabstop=4
+set tabstop=2
 set noexpandtab
 
 " Spell check
@@ -108,6 +112,8 @@ require('lspconfig')['tsserver'].setup {
 			debounce_text_changes = 150,
 		}
 }
+
+require("mason").setup()
 
 EOF
 
