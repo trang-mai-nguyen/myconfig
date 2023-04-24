@@ -12,15 +12,25 @@ Plug 'vim-test/vim-test'	" Running tests
 Plug 'williamboman/mason.nvim'
 Plug 'neovim/nvim-lspconfig'	
 Plug 'hrsh7th/cmp-nvim-lsp'
+Plug 'hrsh7th/cmp-buffer'
+Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 
+
+Plug 'hrsh7th/cmp-vsnip'
+Plug 'hrsh7th/vim-vsnip'
+
 Plug 'rebelot/kanagawa.nvim'	" Colorscheme
-Plug 'jiangmiao/auto-pairs'
+Plug 'windwp/nvim-autopairs'
 Plug 'mhartington/formatter.nvim'
 
 Plug 'lewis6991/gitsigns.nvim'	" Gitsigns
-Plug 'tpope/vim-fugitive'		" Gigt
+Plug 'tpope/vim-fugitive'		" Gig
 Plug 'tpope/vim-surround'	
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-rails'
+
+Plug 'lukas-reineke/indent-blankline.nvim'
 
 call plug#end()
 
@@ -33,6 +43,7 @@ set encoding=utf-8
 set ignorecase		" case insensitive
 set hlsearch		" highlight search
 set noswapfile		" disable creating swap files
+set clipboard=unnamed " enable copy to clipboard
 " set updatetime=300
 " set scrolloff=4		" Keep at least 4 lines below cursor
 syntax on			" syntax highlight
@@ -57,17 +68,34 @@ nmap - $	" End of the line
 let mapleader = " "
 nnoremap <leader>so :source $MYVIMRC<cr>
 imap jk <esc>	" Escape in insert mode
+
+" Formatting
 nnoremap <leader>f :lua vim.lsp.buf.format({ timeout_ms = 2000 })<CR>
+
 " Git
 nnoremap <leader>gb :Gitsigns toggle_current_line_blame<cr>	
 nnoremap <leader>gd :Gvdiffsplit<cr>
 
-" Telescope
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
+" Moving between windows (will not work in tmux)
+nmap <C-H> <C-W>h 
+nmap <C-J> <C-W>j 
+nmap <C-K> <C-W>k 
+nmap <C-L> <C-W>l 
 
-nnoremap <silent><C-p> :lua require('telescope.builtin').find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>
-nnoremap <silent><C-f> <cmd>lua require('telescope.builtin').live_grep()<cr>
+" Moving between windows (works in tmux)
+nmap <leader>h <C-W>h
+nmap <leader>j <C-W>j
+nmap <leader>k <C-W>k
+nmap <leader>l <C-W>l
+
+" Vim Rails
+nmap <leader>a :A<cr>
+nmap <leader>av :AV<cr>
+
+" Telescope
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>ff :lua require('telescope.builtin').find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>
+nnoremap <leader>fw <cmd>lua require('telescope.builtin').live_grep()<cr>
 
 lua << EOF
 require('telescope').setup {
@@ -95,16 +123,85 @@ require('telescope').load_extension('fzf')
 
 require('gitsigns').setup()
 
+-- Set up nvim-cmp.
+  local cmp = require'cmp'
+
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    window = {
+      -- completion = cmp.config.window.bordered(),
+      -- documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+    }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Set configuration for specific filetype.
+  cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+      { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline({ '/', '?' }, {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+
 -- Setup lspconfig.
 local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
--- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
 require('lspconfig')['solargraph'].setup {
 		capabilities = capabilities,
 		flags = {
 			debounce_text_changes = 150,
 		}
 }
+
+-- Set up nvim-autopairs
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+	'confirm_done',
+	cmp_autopairs.on_confirm_done()
+)
+
 
 require('lspconfig')['tsserver'].setup {
 		capabilities = capabilities,
@@ -114,6 +211,8 @@ require('lspconfig')['tsserver'].setup {
 }
 
 require("mason").setup()
+require("nvim-autopairs").setup {}
+require('indent_blankline').setup()
 
 EOF
 
@@ -124,4 +223,8 @@ colorscheme kanagawa
 nmap <silent> <space>t :TestNearest<CR>
 nmap <silent> <space>T :TestFile<CR>
 
+" Because I'm a gold fish
+" gcc				Commeand a line
+" gf				Go to file	
+" <Ctrl-o>	Go back to previous file
 
