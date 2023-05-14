@@ -16,7 +16,6 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-cmdline'
 Plug 'hrsh7th/nvim-cmp'
 
-
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 
@@ -31,6 +30,9 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-rails'
 
 Plug 'lukas-reineke/indent-blankline.nvim'
+
+Plug 'kyazdani42/nvim-web-devicons' " optional, for file icons
+Plug 'kyazdani42/nvim-tree.lua'
 
 call plug#end()
 
@@ -89,8 +91,12 @@ nmap <leader>k <C-W>k
 nmap <leader>l <C-W>l
 
 " Vim Rails
+" Find alternative (test file) 
 nmap <leader>a :A<cr>
 nmap <leader>av :AV<cr>
+
+" NvimTree
+nmap <leader>nt :NvimTreeToggle<cr>
 
 " Telescope
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
@@ -213,6 +219,18 @@ require('lspconfig')['tsserver'].setup {
 require("mason").setup()
 require("nvim-autopairs").setup {}
 require('indent_blankline').setup()
+require("nvim-tree").setup({
+  sort_by = "case_sensitive",
+  view = {
+    width = 30,
+  },
+  renderer = {
+    group_empty = true,
+  },
+  filters = {
+    dotfiles = true,
+  },
+})
 
 EOF
 
