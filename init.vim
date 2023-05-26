@@ -30,8 +30,6 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-rails'
 
 Plug 'lukas-reineke/indent-blankline.nvim'
-
-Plug 'kyazdani42/nvim-web-devicons' " optional, for file icons
 Plug 'kyazdani42/nvim-tree.lua'
 
 call plug#end()
@@ -100,13 +98,20 @@ nmap <leader>nt :NvimTreeToggle<cr>
 
 " Telescope
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>ff :lua require('telescope.builtin').find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+" nnoremap <leader>ff :lua require('telescope.builtin').find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>
 nnoremap <leader>fw <cmd>lua require('telescope.builtin').live_grep()<cr>
 
 lua << EOF
 require('telescope').setup {
+	pickers = {
+		find_files = {
+			find_command = {'rg', '--files', '--hidden', '-g', '!.git'},
+			hidden = true
+			}
+		},
     defaults = {
-        file_ignore_patterns = { "%.rbi", "%.keep" },
+       file_ignore_patterns = { "%.rbi", "%.keep" },
         layout_strategy = "vertical",
         sorting_strategy = "ascending",
         color_devicons = true,
@@ -230,6 +235,13 @@ require("nvim-tree").setup({
   filters = {
     dotfiles = true,
   },
+	filesystem = {
+		filtered_items = {
+      visible = true,
+			hide_dotfiles = false,
+      hide_gitignored = true 
+		}
+	}
 })
 
 EOF
