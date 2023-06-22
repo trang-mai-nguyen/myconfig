@@ -19,7 +19,8 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 
-Plug 'rebelot/kanagawa.nvim'	" Colorscheme
+" Plug 'rebelot/kanagawa.nvim'	" Colorscheme
+Plug 'EdenEast/nightfox.nvim'	" Colorscheme
 Plug 'windwp/nvim-autopairs'
 Plug 'mhartington/formatter.nvim'
 
@@ -101,6 +102,13 @@ nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>ff <cmd>Telescope find_files<cr>
 " nnoremap <leader>ff :lua require('telescope.builtin').find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>
 nnoremap <leader>fw <cmd>lua require('telescope.builtin').live_grep()<cr>
+
+" colorschme
+colorscheme nightfox
+
+" vim test
+nmap <silent> <space>t :TestNearest<CR>
+nmap <silent> <space>T :TestFile<CR>
 
 lua << EOF
 require('telescope').setup {
@@ -245,16 +253,4 @@ require("nvim-tree").setup({
 })
 
 EOF
-
-" Color scheme
-colorscheme kanagawa
-
-" Vim test 
-nmap <silent> <space>t :TestNearest<CR>
-nmap <silent> <space>T :TestFile<CR>
-
-" Because I'm a gold fish
-" gcc				Commeand a line
-" gf				Go to file	
-" <Ctrl-o>	Go back to previous file
 
