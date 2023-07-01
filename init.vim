@@ -114,8 +114,8 @@ lua << EOF
 require('telescope').setup {
 	pickers = {
 		find_files = {
-			find_command = {'rg', '--files', '--hidden', '-g', '!.git'},
-			hidden = true
+			hidden = true,
+			find_command = {'rg', '--files', '--hidden', '-g', '!.git'}
 			}
 		},
     defaults = {
@@ -164,7 +164,7 @@ require('gitsigns').setup()
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<C-e>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     }),
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
@@ -233,6 +233,12 @@ require("mason").setup()
 require("nvim-autopairs").setup {}
 require('indent_blankline').setup()
 require("nvim-tree").setup({
+	sync_root_with_cwd = true,
+	update_focused_file = {
+		enable = true,
+		update_root = true
+	},
+	respect_buf_cwd = true,
   sort_by = "case_sensitive",
   view = {
     width = 30,
@@ -241,15 +247,9 @@ require("nvim-tree").setup({
     group_empty = true,
   },
   filters = {
-    dotfiles = true,
-  },
-	filesystem = {
-		filtered_items = {
-      visible = true,
-			hide_dotfiles = false,
-      hide_gitignored = true 
-		}
-	}
+    dotfiles = false,
+		exclude = { ".env"}
+  }
 })
 
 EOF
