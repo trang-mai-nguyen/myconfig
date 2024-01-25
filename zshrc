@@ -40,12 +40,14 @@ source ~/.zsh/aliases.zsh
 
 # something asdf?
 eval "$(/opt/homebrew/bin/brew shellenv)"
-source /opt/homebrew/opt/asdf/asdf.sh
 source /Users/jm/.config/broot/launcher/bash/br
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
+source /opt/homebrew/opt/asdf/libexec/asdf.sh
 
 # export PATH="$HOME/.bin:$PATH"
 export PATH=/usr/local/sbin:$PATH
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+# export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+
 # delete this path below when done learning Nand2Tetris
 export PATH=~/Learn/nand2tetris/tools:$PATH
+# SML for Programming Languages Part A
+export PATH="$PATH:/usr/local/smlnj/bin"

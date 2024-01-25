@@ -19,6 +19,8 @@ Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
 
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
 " Plug 'rebelot/kanagawa.nvim'	" Colorscheme
 Plug 'EdenEast/nightfox.nvim'	" Colorscheme
 Plug 'windwp/nvim-autopairs'
@@ -32,6 +34,8 @@ Plug 'tpope/vim-rails'
 
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
+Plug 'github/copilot.vim'
+" Plug 'zbirenbaum/copilot.lua'
 
 call plug#end()
 
@@ -71,7 +75,7 @@ nnoremap <leader>so :source $MYVIMRC<cr>
 imap jk <esc>	" Escape in insert mode
 
 " Formatting
-nnoremap <leader>f :lua vim.lsp.buf.format({ timeout_ms = 2000 })<CR>
+nnoremap <leader>fa :lua vim.lsp.buf.format({ timeout_ms = 2000 })<CR>
 
 " Git
 nnoremap <leader>gb :Gitsigns toggle_current_line_blame<cr>	
@@ -103,12 +107,45 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 " nnoremap <leader>ff :lua require('telescope.builtin').find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})<cr>
 nnoremap <leader>fw <cmd>lua require('telescope.builtin').live_grep()<cr>
 
-" colorschme
+" colorscheme
 colorscheme nightfox
 
 " vim test
-nmap <silent> <space>t :TestNearest<CR>
-nmap <silent> <space>T :TestFile<CR>
+" save file and test
+nmap <silent> <space>t :w <BAR> :TestNearest<CR> 
+nmap <silent> <space>T :w <BAR> :TestFile<CR>
+
+" coc.nvim config
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved
+set signcolumn=yes
+
+" Having longer updatetime (default is 4000 ms = 4s) leads to noticeable
+" delays and poor user experience
+set updatetime=300
+
+" Some servers have issues with backup files, see #649
+set nobackup
+set nowritebackup
+
+" GoTo code navigation
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Formatting selected code:
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s)
+  autocmd FileType typescript,json,ruby setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
 
 lua << EOF
 require('telescope').setup {
@@ -143,6 +180,16 @@ require('telescope').load_extension('fzf')
 require('gitsigns').setup()
 
 -- Set up nvim-cmp.
+local has_words_before = function()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+end
+
+local feedkey = function(key, mode)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
+
   local cmp = require'cmp'
 
   cmp.setup({
@@ -164,7 +211,7 @@ require('gitsigns').setup()
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<C-e>'] = cmp.mapping.abort(),
-      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      --['<Tab>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     }),
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
@@ -214,20 +261,19 @@ require('lspconfig')['solargraph'].setup {
 		}
 }
 
--- Set up nvim-autopairs
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
-cmp.event:on(
-	'confirm_done',
-	cmp_autopairs.on_confirm_done()
-)
-
-
 require('lspconfig')['tsserver'].setup {
 		capabilities = capabilities,
 		flags = {
 			debounce_text_changes = 150,
 		}
 }
+
+-- Set up nvim-autopairs
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+	'confirm_done',
+	cmp_autopairs.on_confirm_done()
+)
 
 require("mason").setup()
 require("nvim-autopairs").setup {}
