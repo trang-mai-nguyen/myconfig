@@ -11,7 +11,7 @@ RPS1="%F{green}%D{%d-%b}%t%f"
 
 #EDITOR 
 export EDITOR="/opt/homebrew/bin/vim"
-export VISUAL="$EDITOR"
+export VISUAL="nvim"
 
 #THEME
 #Nord
