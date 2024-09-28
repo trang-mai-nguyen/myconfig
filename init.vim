@@ -3,7 +3,7 @@ runtime macros/matchit.vim
 call plug#begin('~/.vim/plugged')
 
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.5' }
 Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' } " Fuzzy finder for telescope
 Plug 'nvim-telescope/telescope-live-grep-args.nvim'
 
@@ -11,7 +11,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'vim-test/vim-test'	" Running tests
 
 Plug 'williamboman/mason.nvim'
-Plug 'neovim/nvim-lspconfig'	
+Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-cmdline'
@@ -19,24 +19,28 @@ Plug 'hrsh7th/nvim-cmp'
 
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
+Plug 'weizheheng/ror.nvim'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Plug 'rebelot/kanagawa.nvim'	" Colorscheme
 Plug 'EdenEast/nightfox.nvim'	" Colorscheme
+" Plug 'shaunsingh/nord.nvim' " Colorscheme
 Plug 'windwp/nvim-autopairs'
 Plug 'mhartington/formatter.nvim'
 
 Plug 'lewis6991/gitsigns.nvim'	" Gitsigns
 Plug 'tpope/vim-fugitive'		" Gig
-Plug 'tpope/vim-surround'	
+Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-rails'
 
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'kyazdani42/nvim-tree.lua'
-Plug 'github/copilot.vim'
-" Plug 'zbirenbaum/copilot.lua'
+Plug 'nvim-tree/nvim-web-devicons'
+" Plug 'github/copilot.vim'
+Plug 'ggandor/leap.nvim'
+Plug 'supermaven-inc/supermaven-nvim'
 
 call plug#end()
 
@@ -59,7 +63,7 @@ set history=500		" Set number of command + search history to 500
 " Use wide tabs
 set tabstop=2		" number of columns occupied by a tab
 set softtabstop=2	" Control how many columns Vim uses when you hit tab key
-set shiftwidth=2
+set shiftwidth=2 smarttab
 set expandtab
 set smarttab		" Affects how tab key presses are interpreted
 set tabstop=2
@@ -68,25 +72,28 @@ set noexpandtab
 " Spell check
 set spell
 
-" Mapping 
-nmap 0 ^	" Begin of the line 
+" Mapping
+nmap 0 ^	" Begin of the line
 nmap - $	" End of the line
 let mapleader = " "
 nnoremap <leader>so :source $MYVIMRC<cr>
 imap jk <esc>	" Escape in insert mode
 
+" Copy current file path to clipboard
+nnoremap <leader>fp :let @+=expand('%:p')<CR>
+
 " Formatting
-nnoremap <leader>fa :lua vim.lsp.buf.format({ timeout_ms = 2000 })<CR>
+nnoremap <leader>fa :lua vim.lsp.buf.format({ timeout_ms = 2000 })<cr>
 
 " Git
-nnoremap <leader>gb :Gitsigns toggle_current_line_blame<cr>	
+nnoremap <leader>gb :Gitsigns toggle_current_line_blame<cr>
 nnoremap <leader>gd :Gvdiffsplit<cr>
 
 " Moving between windows (will not work in tmux)
-nmap <C-H> <C-W>h 
-nmap <C-J> <C-W>j 
-nmap <C-K> <C-W>k 
-nmap <C-L> <C-W>l 
+nmap <C-H> <C-W>h
+nmap <C-J> <C-W>j
+nmap <C-K> <C-W>k
+nmap <C-L> <C-W>l
 
 " Moving between windows (works in tmux)
 nmap <leader>h <C-W>h
@@ -95,7 +102,7 @@ nmap <leader>k <C-W>k
 nmap <leader>l <C-W>l
 
 " Vim Rails
-" Find alternative (test file) 
+" Find alternative (test file)
 nmap <leader>a :A<cr>
 nmap <leader>av :AV<cr>
 
@@ -111,9 +118,12 @@ nnoremap <leader>fw <cmd>lua require('telescope').extensions.live_grep_args.live
 " colorscheme
 colorscheme nightfox
 
+" save
+nmap <silent> <leader> ss :w<CR>
+
 " vim test
 " save file and test
-nmap <silent> <space>t :w <BAR> :TestNearest<CR> 
+nmap <silent> <space>t :w <BAR> :TestNearest<CR>
 nmap <silent> <space>T :w <BAR> :TestFile<CR>
 
 " coc.nvim config
@@ -139,6 +149,10 @@ nmap <silent> gr <Plug>(coc-references)
 " Formatting selected code:
 xmap <leader>f  <Plug>(coc-format-selected)
 nmap <leader>f  <Plug>(coc-format-selected)
+
+" Leap
+nmap q <Plug>(leap-forward)
+nmap Q <Plug>(leap-backward)
 
 augroup mygroup
   autocmd!
@@ -228,7 +242,7 @@ end
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
       ['<C-Space>'] = cmp.mapping.complete(),
       ['<C-e>'] = cmp.mapping.abort(),
-      --['<Tab>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+      ['<Tab>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
     }),
     sources = cmp.config.sources({
       { name = 'nvim_lsp' },
@@ -237,7 +251,7 @@ end
       -- { name = 'ultisnips' }, -- For ultisnips users.
       -- { name = 'snippy' }, -- For snippy users.
     }, {
-      { name = 'buffer' },
+      { name = 'supermaven' },
     })
   })
 
@@ -269,7 +283,8 @@ end
   })
 
 -- Setup lspconfig.
-local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+--local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 require('lspconfig')['solargraph'].setup {
 		capabilities = capabilities,
@@ -285,6 +300,60 @@ require('lspconfig')['tsserver'].setup {
 		}
 }
 
+require('lspconfig')['hls'].setup{}
+require('lspconfig').efm.setup {
+    init_options = {documentFormatting = true},
+    filetypes = { 'html', 'eruby', 'mjml'},
+    root_dir = vim.loop.cwd,
+    settings = {
+        rootMarkers = {".git/"},
+        languages = {
+            mjml = {{
+							formatCommand = "htmlbeautifier",
+							formatStdin = true,
+						}},
+        }
+    }
+}
+
+-- Global mappings.
+-- See `:help vim.diagnostic.*` for documentation on any of the below functions
+vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+
+-- Use LspAttach autocommand to only map the following keys
+-- after the language server attaches to the current buffer
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('UserLspConfig', {}),
+  callback = function(ev)
+    -- Enable completion triggered by <c-x><c-o>
+    vim.bo[ev.buf].omnifunc = 'v:lua.vim.lsp.omnifunc'
+
+    -- Buffer local mappings.
+    -- See `:help vim.lsp.*` for documentation on any of the below functions
+    local opts = { buffer = ev.buf }
+    vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<space>wa', vim.lsp.buf.add_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wr', vim.lsp.buf.remove_workspace_folder, opts)
+    vim.keymap.set('n', '<space>wl', function()
+      print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+    end, opts)
+    vim.keymap.set('n', '<space>D', vim.lsp.buf.type_definition, opts)
+    vim.keymap.set('n', '<space>rn', vim.lsp.buf.rename, opts)
+    vim.keymap.set({ 'n', 'v' }, '<space>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', '<space>f', function()
+      vim.lsp.buf.format { async = true }
+    end, opts)
+  end,
+})
+
 -- Set up nvim-autopairs
 local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 cmp.event:on(
@@ -294,7 +363,7 @@ cmp.event:on(
 
 require("mason").setup()
 require("nvim-autopairs").setup {}
-require('indent_blankline').setup()
+require("ibl").setup()
 require("nvim-tree").setup({
 	sync_root_with_cwd = true,
 	update_focused_file = {
@@ -315,5 +384,25 @@ require("nvim-tree").setup({
   }
 })
 
+require("supermaven-nvim").setup({
+  keymaps = {
+    accept_suggestion = "<Tab>",
+    clear_suggestion = "<C-]>",
+    accept_word = "<C-j>",
+  },
+  ignore_filetypes = { cpp = true },
+  color = {
+    suggestion_color = "#ffffff",
+    cterm = 244,
+  },
+  log_level = "info", -- set to "off" to disable logging completely
+  disable_inline_completion = false, -- disables inline completion for use with cmp
+  disable_keymaps = false, -- disables built in keymaps for more manual control
+  condition = function()
+    return false
+  end -- condition to check for stopping supermaven, `true` means to stop supermaven when the condition is true.
+})
+
 EOF
 
+" require('leap').create_default_mappings()

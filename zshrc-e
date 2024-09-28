@@ -51,8 +51,3 @@ export PATH=/usr/local/sbin:$PATH
 export PATH=~/Learn/nand2tetris/tools:$PATH
 # SML for Programming Languages Part A
 export PATH="$PATH:/usr/local/smlnj/bin"
-export PATH="$PATH:/Users/jm/.ghcup/env"
-
-[ -f "/Users/jm/.ghcup/env" ] && . "/Users/jm/.ghcup/env" # ghcup-env
-
-. /opt/homebrew/opt/asdf/libexec/asdf.sh
