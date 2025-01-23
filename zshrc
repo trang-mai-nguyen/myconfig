@@ -56,3 +56,6 @@ export PATH="$PATH:/Users/jm/.ghcup/env"
 [ -f "/Users/jm/.ghcup/env" ] && . "/Users/jm/.ghcup/env" # ghcup-env
 
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
+
+export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+export DISABLE_SPRING=true

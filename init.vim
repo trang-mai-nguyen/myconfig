@@ -48,12 +48,12 @@ set nocompatible	" Disable compatibility to old time vi
 set nohidden
 set relativenumber 	" Relative line numbers
 set number			" Also show current absolute line
-"set autoindent
+set autoindent
 set encoding=utf-8
 set ignorecase		" case insensitive
 set hlsearch		" highlight search
 set noswapfile		" disable creating swap files
-set clipboard=unnamed " enable copy to clipboard
+set clipboard=unnamedplus " enable copy to clipboard
 " set updatetime=300
 " set scrolloff=4		" Keep at least 4 lines below cursor
 syntax on			" syntax highlight
@@ -61,9 +61,9 @@ set visualbell noerrorbells " No visual and errorbells
 set history=500		" Set number of command + search history to 500
 
 " Use wide tabs
+set shiftwidth=2
 set tabstop=2		" number of columns occupied by a tab
 set softtabstop=2	" Control how many columns Vim uses when you hit tab key
-set shiftwidth=2 smarttab
 set expandtab
 set smarttab		" Affects how tab key presses are interpreted
 set tabstop=2
@@ -71,6 +71,9 @@ set noexpandtab
 
 " Spell check
 set spell
+
+" Consider this-word as 1 word
+set iskeyword+=-
 
 " Mapping
 nmap 0 ^	" Begin of the line
@@ -90,10 +93,14 @@ nnoremap <leader>gb :Gitsigns toggle_current_line_blame<cr>
 nnoremap <leader>gd :Gvdiffsplit<cr>
 
 " Moving between windows (will not work in tmux)
-nmap <C-H> <C-W>h
-nmap <C-J> <C-W>j
-nmap <C-K> <C-W>k
-nmap <C-L> <C-W>l
+" nmap <C-H> <C-W>h
+" nmap <C-J> <C-W>j
+" nmap <C-K> <C-W>k
+" nmap <C-L> <C-W>l
+
+" Navigate buffers
+onoremap <S-l> :bnext<CR>
+nnoremap <S-h> :bprevious<CR>
 
 " Moving between windows (works in tmux)
 nmap <leader>h <C-W>h
@@ -117,9 +124,6 @@ nnoremap <leader>fw <cmd>lua require('telescope').extensions.live_grep_args.live
 
 " colorscheme
 colorscheme nightfox
-
-" save
-nmap <silent> <leader> ss :w<CR>
 
 " vim test
 " save file and test
@@ -163,6 +167,7 @@ augroup mygroup
 augroup end
 
 lua << EOF
+
 local lga_actions = require("telescope-live-grep-args.actions")
 require('telescope').setup {
 	pickers = {
@@ -188,7 +193,7 @@ require('telescope').setup {
           override_file_sorter = true,     -- override the file sorter
           case_mode = "smart_case",        -- or "ignore_case" or "respect_case"
                                            -- the default case_mode is "smart_case"
-        },
+					},
 				 live_grep_args = {
       auto_quoting = true, -- enable/disable auto-quoting
       -- define mappings, e.g.
@@ -286,6 +291,25 @@ end
 --local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
+require('lspconfig').yamlls.setup {
+	on_attach = function(client, bufnr)
+		client.server_capabilities.documentFormattingProvider = true
+		on_attach(client, bufnr)
+	end,
+	flags = lsp_flags,
+	capabilities = capabilities,
+	settings = {
+		yaml = {
+			format = {
+				enable = true,
+			},
+			schemaStore = {
+				enable = true,
+			}
+		}
+	}
+}
+
 require('lspconfig')['solargraph'].setup {
 		capabilities = capabilities,
 		flags = {
@@ -322,6 +346,23 @@ vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist)
+
+vim.opt.signcolumn = "yes"
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "ruby",
+  callback = function()
+    vim.lsp.start { name = "rubocop",
+      cmd = { "bundle", "exec", "rubocop", "--lsp" },
+    }
+  end,
+})
+
+vim.api.nvim_create_autocmd("BufWritePre", {
+  pattern = "*.rb",
+  callback = function()
+    vim.lsp.buf.format()
+  end,
+})
 
 -- Use LspAttach autocommand to only map the following keys
 -- after the language server attaches to the current buffer
