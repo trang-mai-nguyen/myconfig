@@ -40,7 +40,7 @@ Plug 'kyazdani42/nvim-tree.lua'
 Plug 'nvim-tree/nvim-web-devicons'
 " Plug 'github/copilot.vim'
 Plug 'ggandor/leap.nvim'
-Plug 'supermaven-inc/supermaven-nvim'
+" Plug 'supermaven-inc/supermaven-nvim'
 
 call plug#end()
 

@@ -2,7 +2,7 @@
 local opt = vim.opt
 opt.backup = false                          -- creates a backup file
 opt.clipboard = "unnamedplus"               -- allows neovim to access the system clipboard
---opt.cmdheight = 2                           -- more space in the neovim command line for displaying messages
+opt.cmdheight = 2                           -- more space in the neovim command line for displaying messages
 opt.completeopt = { "menuone", "noselect" } -- mostly just for cmp
 opt.conceallevel = 0                        -- so that `` is visible in markdown files
 opt.fileencoding = "utf-8"                  -- the encoding written to a file
@@ -14,7 +14,7 @@ opt.showmode = false                        -- we don't need to see things like 
 opt.showtabline = 2                         -- always show tabs
 opt.smartcase = true                        -- smart case
 opt.smartindent = true                      -- make indenting smarter again
-opt.splitbelow = true                       -- force all horizontal splits to go below current window
+-- opt.splitbelow = true                       -- force all horizontal splits to go below current window
 opt.splitright = true                       -- force all vertical splits to go to the right of current window
 opt.swapfile = false                        -- creates a swapfile
 opt.termguicolors = true                    -- set term gui colors (most terminals support this)
@@ -41,11 +41,6 @@ opt.sidescrolloff = 8
 opt.guifont = "monospace:h17"               -- the font used in graphical neovim applications
 
 opt.shortmess:append "c"
-
--- nvim-tree
--- disable netrw at the very start of your init.lua
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
 
 vim.cmd "set whichwrap+=<,>,[,],h,l"
 vim.cmd [[set iskeyword+=-]]

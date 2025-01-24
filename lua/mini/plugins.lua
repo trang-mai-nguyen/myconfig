@@ -62,16 +62,15 @@ return packer.startup(function(use)
   use "rafamadriz/friendly-snippets" -- a bunch of snippets to use
 
   -- LSP
-  use "neovim/nvim-lspconfig"             -- enable LSP
-  use "williamboman/mason.nvim"           -- simple to use language server installer
-  use "williamboman/mason-lspconfig.nvim" -- simple to use language server installer
-  use 'jose-elias-alvarez/null-ls.nvim'   -- LSP diagnostics and code actions
+  use "neovim/nvim-lspconfig"                     -- enable LSP
+  use "williamboman/mason.nvim"                   -- simple to use language server installer
+  use "williamboman/mason-lspconfig.nvim"         -- simple to use language server installer
+  use 'jose-elias-alvarez/null-ls.nvim'           -- LSP diagnostics and code actions
 
   -- AI stuff
   use "supermaven-inc/supermaven-nvim"
 
   -- Telescope
-  use 'nvim-lua/plenary.nvim'
   use { 'nvim-telescope/telescope.nvim', tag = "0.1.8" }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   use 'nvim-telescope/telescope-live-grep-args.nvim'
@@ -82,6 +81,7 @@ return packer.startup(function(use)
   -- Git
   use "lewis6991/gitsigns.nvim"
   use "tpope/vim-fugitive"
+  use "tpope/vim-rhubarb"
 
   -- Uncategorized
   use 'tpope/vim-surround'
@@ -89,6 +89,8 @@ return packer.startup(function(use)
   use "vim-test/vim-test"
   use 'ggandor/leap.nvim'
   use 'kyazdani42/nvim-tree.lua'
+  use 'nvim-tree/nvim-web-devicons'
+  use 'windwp/nvim-autopairs'
 
   -- Rails
   use 'tpope/vim-rails'

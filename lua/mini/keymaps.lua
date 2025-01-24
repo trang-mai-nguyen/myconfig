@@ -56,11 +56,14 @@ keymap('n', '<leader>fw', "<cmd>lua require('telescope').extensions.live_grep_ar
 
 -- Git
 keymap("n", "<leader>gb", "<cmd>Gitsigns toggle_current_line_blame<CR>", opts) --gitsigns
-keymap("n", "<leader>gd", "<cmd>Gvdiffsplit<CR>", opts) --git fugitive 
+keymap("n", "<leader>gd", "<cmd>Gvdiffsplit<CR>", opts)                        --git fugitive
+keymap("n", "<leader>gb", "<cmd>GBrowse<CR>", opts)                            --git fugitive
 
 -- Rails
-keymap("n", "<leader>a", "<cmd>A<CR>", opts) -- vim-rails
+keymap("n", "<leader>a", "<cmd>A<CR>", opts)   -- vim-rails
 keymap("n", "<leader>av", "<cmd>AV<CR>", opts) -- vim-rails
+keymap("n", "<leader>r", "<cmd>R<CR>", opts)   -- vim-rails
+keymap("n", "<leader>rv", "<cmd>RV<CR>", opts) -- vim-rails
 
 -- Running tests
 keymap("n", "<space>t", "<cmd>w<CR> <cmd>TestNearest<CR>", opts)
@@ -73,6 +76,9 @@ keymap("n", "Q", "<Plug>(leap-backward)", opts)
 -- File explorer
 keymap("n", "<leader>e", ":Lex 30<cr>", opts)
 keymap("n", "<leader>nt", "<cmd>NvimTreeToggle<cr>", opts)
+
+-- Copy current file path to clipboard
+keymap("n", "<leader>fp", "<cmd>let @+=expand('%:p')<CR>", opts)
 
 -- Insert --
 -- Press jk fast to enter
