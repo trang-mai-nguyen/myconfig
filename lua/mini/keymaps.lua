@@ -70,8 +70,8 @@ keymap("n", "<leader>r", "<cmd>R<CR>", opts)   -- vim-rails
 keymap("n", "<leader>rv", "<cmd>RV<CR>", opts) -- vim-rails
 
 -- Running tests
-keymap("n", "<space>t", "<cmd>w<CR> <cmd>TestNearest<CR>", opts)
-keymap("n", "<space>T", "<cmd>w<CR> <cmd>TestFile<CR>", opts)
+keymap("n", "<leader>t", "<cmd>w<CR> <cmd>TestNearest<CR>", opts)
+keymap("n", "<leader>T", "<cmd>w<CR> <cmd>TestFile<CR>", opts)
 
 -- Leap
 keymap("n", "q", "<Plug>(leap-forward)", opts)
@@ -114,7 +114,8 @@ keymap("v", "p", '"_dP', opts)
 
 -- Terminal --
 -- Better terminal navigation
-keymap("t", "<C-h>", "<C-\\><C-N><C-w>h", term_opts)
-keymap("t", "<C-j>", "<C-\\><C-N><C-w>j", term_opts)
-keymap("t", "<C-k>", "<C-\\><C-N><C-w>k", term_opts)
-keymap("t", "<C-l>", "<C-\\><C-N><C-w>l", term_opts)
+keymap("t", "<leader>h", "<C-\\><C-N><C-w>h", term_opts)
+keymap("t", "<leader>j", "<C-\\><C-N><C-w>j", term_opts)
+keymap("t", "<leader>k", "<C-\\><C-N><C-w>k", term_opts)
+keymap("t", "<leader>l", "<C-\\><C-N><C-w>l", term_opts)
+keymap("t", "jk", "<C-\\><C-N>", term_opts)
