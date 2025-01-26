@@ -47,6 +47,8 @@ return packer.startup(function(use)
 
   -- Colorscheme
   use "EdenEast/nightfox.nvim"
+  -- use "tinted-theming/tinted-vim"
+  -- use "AlexvZyl/nordic.nvim"
 
   -- cmp plugins
   use "hrsh7th/nvim-cmp"         -- The completion plugin
@@ -62,10 +64,10 @@ return packer.startup(function(use)
   use "rafamadriz/friendly-snippets" -- a bunch of snippets to use
 
   -- LSP
-  use "neovim/nvim-lspconfig"                     -- enable LSP
-  use "williamboman/mason.nvim"                   -- simple to use language server installer
-  use "williamboman/mason-lspconfig.nvim"         -- simple to use language server installer
-  use 'jose-elias-alvarez/null-ls.nvim'           -- LSP diagnostics and code actions
+  use "neovim/nvim-lspconfig"             -- enable LSP
+  use "williamboman/mason.nvim"           -- simple to use language server installer
+  use "williamboman/mason-lspconfig.nvim" -- simple to use language server installer
+  use 'jose-elias-alvarez/null-ls.nvim'   -- LSP diagnostics and code actions
 
   -- AI stuff
   use "supermaven-inc/supermaven-nvim"
@@ -91,6 +93,7 @@ return packer.startup(function(use)
   use 'kyazdani42/nvim-tree.lua'
   use 'nvim-tree/nvim-web-devicons'
   use 'windwp/nvim-autopairs'
+  use "nvim-lualine/lualine.nvim" --statusline
 
   -- Rails
   use 'tpope/vim-rails'

@@ -58,6 +58,10 @@ keymap('n', '<leader>fw', "<cmd>lua require('telescope').extensions.live_grep_ar
 keymap("n", "<leader>gb", "<cmd>Gitsigns toggle_current_line_blame<CR>", opts) --gitsigns
 keymap("n", "<leader>gd", "<cmd>Gvdiffsplit<CR>", opts)                        --git fugitive
 keymap("n", "<leader>gb", "<cmd>GBrowse<CR>", opts)                            --git fugitive
+keymap("n", "<leader>gco", "<cmd>! zsh -ic 'gco'<CR>", opts)                   --zsh git alias
+keymap("n", "<leader>gu", "<cmd>! zsh -ic 'gu'<CR>", opts)                     --zsh git alias
+-- keymap("n", "<leader>gss", "<cmd>! zsh -ic 'gs'", opts)                        --zsh git alias
+-- keymap("n", "<leader>gsp", "<cmd>! zsh -ic 'gsp'", opts)                       --zsh git alias
 
 -- Rails
 keymap("n", "<leader>a", "<cmd>A<CR>", opts)   -- vim-rails
@@ -74,11 +78,16 @@ keymap("n", "q", "<Plug>(leap-forward)", opts)
 keymap("n", "Q", "<Plug>(leap-backward)", opts)
 
 -- File explorer
-keymap("n", "<leader>e", ":Lex 30<cr>", opts)
+-- keymap("n", "<leader>e", ":Lex 30<cr>", opts)
 keymap("n", "<leader>nt", "<cmd>NvimTreeToggle<cr>", opts)
+keymap("n", "<leader>e", "<cmd>NvimTreeToggle<cr>", opts)
 
 -- Copy current file path to clipboard
 keymap("n", "<leader>fp", "<cmd>let @+=expand('%:p')<CR>", opts)
+
+-- Tabs and buffers
+keymap("n", "<leader>tb", "<cmd>tabnew<cr>", opts)
+keymap("n", "<leader>bd", "<cmd>bd<cr>", opts)
 
 -- Insert --
 -- Press jk fast to enter
