@@ -3,11 +3,6 @@ function parse_git_branch() {
   git branch 2> /dev/null | sed -n -e 's/^\* \(.*\)/[\1]/p'
 }
 
-#set up the prompt (with git branch name)
-NEWLINE=$'\n'
-setopt PROMPT_SUBST
-PS1='%F{green}%~%f %F{magenta}$(parse_git_branch)${NEWLINE}%B★%b%f '
-RPS1="%F{green}%D{%d-%b}%t%f"
 
 #EDITOR 
 export EDITOR="/opt/homebrew/bin/vim"
@@ -26,6 +21,19 @@ autoload -U compinit
 export CLICOLOR=1
 compinit
 
+# syntax highlighting
+source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# vi-mode
+# https://github.com/jeffreytse/zsh-vi-mode
+source ~/.zsh/zsh-vi-mode/zsh-vi-mode.plugin.zsh 
+ZVM_VI_INSERT_ESCAPE_BINDKEY=jk
+
+#set up the prompt (with git branch name)
+NEWLINE=$'\n'
+setopt PROMPT_SUBST
+# PS1='%F{green}%~%f %F{magenta}$(parse_git_branch)${NEWLINE}%B★%b%f '
+RPS1="%F{green}%D{%d-%b}%t%f"
 #pure
 fpath+=($HOME/.zsh/pure)
 autoload -U promptinit; promptinit

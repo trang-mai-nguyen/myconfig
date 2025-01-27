@@ -60,6 +60,8 @@ keymap("n", "<leader>gd", "<cmd>Gvdiffsplit<CR>", opts)                        -
 keymap("n", "<leader>gb", "<cmd>GBrowse<CR>", opts)                            --git fugitive
 keymap("n", "<leader>gco", "<cmd>! zsh -ic 'gco'<CR>", opts)                   --zsh git alias
 keymap("n", "<leader>gu", "<cmd>! zsh -ic 'gu'<CR>", opts)                     --zsh git alias
+keymap("n", "<leader>gb", "<cmd>Telescope git_branches<CR>", opts)             --telescope
+keymap("n", "<leader>gh", "<cmd>Telescope git_commits<CR>", opts)              --telescope
 -- keymap("n", "<leader>gss", "<cmd>! zsh -ic 'gs'", opts)                        --zsh git alias
 -- keymap("n", "<leader>gsp", "<cmd>! zsh -ic 'gsp'", opts)                       --zsh git alias
 

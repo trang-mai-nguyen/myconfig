@@ -55,7 +55,7 @@ telescope.setup {
         -- ["<C-j>"] = actions.nop,
       },
       n = {
-        -- ["<esc>"] = actions.close,
+        ["jk"] = actions.close,
         -- ["<CR>"] = actions.select_default,
         -- ["<C-x>"] = actions.select_horizontal,
         -- ["<C-v>"] = actions.select_vertical,
